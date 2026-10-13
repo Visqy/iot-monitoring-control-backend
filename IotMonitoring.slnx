@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/tests/">
+    <Project Path="tests/IotBackend.Tests/IotBackend.Tests.csproj" />
+  </Folder>
+  <Project Path="IotBackend/IotBackend.csproj" />
+</Solution>

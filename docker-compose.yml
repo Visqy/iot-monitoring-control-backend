@@ -1,0 +1,52 @@
+# Local development stack. Safe defaults: the API and the optional broker listen on
+# 127.0.0.1 only, PostgreSQL is not published to the host, and no default passwords exist.
+# Copy .env.example to .env first (see README).
+services:
+  api:
+    build:
+      context: .
+      dockerfile: IotBackend/Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"
+    env_file:
+      - .env
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=iot_monitoring;Username=iot_user;Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env};SSL Mode=Disable"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: iot_monitoring
+      POSTGRES_USER: iot_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U iot_user -d iot_monitoring"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  mosquitto:
+    profiles: ["local-broker"]
+    image: eclipse-mosquitto:2
+    ports:
+      - "127.0.0.1:1883:1883"
+    volumes:
+      - ./deploy/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    restart: unless-stopped
+
+volumes:
+  postgres-data:

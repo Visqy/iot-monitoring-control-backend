@@ -1,0 +1,13 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+TestResults/
+
+# IDE / user-specific files
+*.user
+.vs/
+.idea/
+
+# Local secrets - never commit real values
+.env
+IotBackend/.env
