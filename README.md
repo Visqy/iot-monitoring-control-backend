@@ -204,16 +204,3 @@ docs/                    architecture, API reference, MQTT contract
   recreating the database is acceptable only for disposable development databases. Foreign keys were
   left out as a proof-of-concept trade-off, and some multi-step writes are not transactional.
 - Details, including smaller RFID and logging-language caveats, are in [`docs/`](docs/).
-
-## My Contributions
-
-This repository is a curated snapshot of the backend from a team internship project. My part:
-
-- the ASP.NET Core backend in this repository (architecture, MQTT integration, PostgreSQL
-  persistence, REST API, authentication, SSE);
-- the ESP32 firmware of the overall project (not included here);
-- cross-layer integration and troubleshooting between firmware, broker, backend and database.
-
-The dashboard and much of the hardware assembly were primarily built by a teammate. The test suite,
-configuration validation, Docker hardening and this documentation were added later, during
-portfolio refinement, not during the original internship.
